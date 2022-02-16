@@ -98,7 +98,13 @@ public class Transit {
 	 * @param station The location of the train station to remove
 	 */
 	public void removeTrainStation(int station) {
-	    // UPDATE THIS METHOD
+	    TNode curNode = trainZero;
+			while(curNode.getNext() != null){
+				if(curNode.getNext().getLocation() == station){
+					curNode.setNext(curNode.getNext().getNext());
+				}
+				curNode = curNode.getNext();
+		}
 	}
 
 	/**

@@ -114,8 +114,17 @@ public class Transit {
 	 * @param busStop The location of the bus stop to add
 	 */
 	public void addBusStop(int busStop) {
-	    // UPDATE THIS METHOD
+	    TNode curNode = trainZero.getDown();
+		while(curNode.getNext() != null){
+			if(curNode.getNext().getLocation() < busStop && curNode.getNext().getNext().getLocation() > busStop){
+				TNode temp = curNode.getNext().getNext();
+				curNode.getNext().setNext(new TNode(busStop));
+				curNode.getNext().getNext().setNext(temp);
+			}
+			curNode = curNode.getNext();
+		}
 	}
+
 	
 	/**
 	 * Determines the optimal path to get to a given destination in the walking layer, and 

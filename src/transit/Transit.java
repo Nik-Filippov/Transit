@@ -120,6 +120,13 @@ public class Transit {
 				TNode temp = curNode.getNext().getNext();
 				curNode.getNext().setNext(new TNode(busStop));
 				curNode.getNext().getNext().setNext(temp);
+				TNode curNodeLoc = trainZero.getDown().getDown();
+				while(curNodeLoc.getNext() != null){
+					if(curNodeLoc.getNext().getLocation() == busStop){
+						curNode.getNext().getNext().setDown(curNodeLoc.getNext());
+					}
+					curNodeLoc = curNodeLoc.getNext();
+				}
 			}
 			curNode = curNode.getNext();
 		}

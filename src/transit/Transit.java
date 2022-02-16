@@ -46,8 +46,49 @@ public class Transit {
 	 * @param locations Int array listing all the walking locations (always increments by 1)
 	 */
 	public void makeList(int[] trainStations, int[] busStops, int[] locations) {
-
-	    // UPDATE THIS METHOD
+		trainZero = new TNode(0);
+		TNode busZero = new TNode(0);
+		TNode locationZero = new TNode(0);
+		trainZero.setDown(busZero);
+		trainZero.getDown().setDown(locationZero);
+		//Add train stations
+		for(int i = 0; i < trainStations.length; i++){
+			TNode curNode = trainZero;
+			while(curNode.getNext() != null){
+				curNode = curNode.getNext();
+			}
+			curNode.setNext(new TNode(trainStations[i]));
+		}
+		//Add bus stops
+		for(int i = 0; i < busStops.length; i++){
+			TNode curNodeBus = busZero;
+			while(curNodeBus.getNext() != null){
+				curNodeBus = curNodeBus.getNext();
+			}
+			curNodeBus.setNext(new TNode(busStops[i]));
+			TNode curNodeTrain = trainZero;
+			while(curNodeTrain.getNext() != null){
+				if(curNodeTrain.getNext().getLocation() == busStops[i]){
+					curNodeTrain.getNext().setDown(curNodeBus.getNext());
+				}
+				curNodeTrain = curNodeTrain.getNext();
+			}
+		}
+		//Add locations
+		for(int i = 0; i < locations.length; i++){
+			TNode curNodeLoc = locationZero;
+			while(curNodeLoc.getNext() != null){
+				curNodeLoc = curNodeLoc.getNext();
+			}
+			curNodeLoc.setNext(new TNode(locations[i]));
+			TNode curNodeBus = busZero;
+			while(curNodeBus.getNext() != null){
+				if(curNodeBus.getNext().getLocation() == locations[i]){
+					curNodeBus.getNext().setDown(curNodeLoc.getNext());
+				}
+				curNodeBus = curNodeBus.getNext();
+			}
+		}
 	}
 	
 	/**

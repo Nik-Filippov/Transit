@@ -141,9 +141,22 @@ public class Transit {
 	 * @return
 	 */
 	public ArrayList<TNode> bestPath(int destination) {
-
-	    // UPDATE THIS METHOD
-	    return null;
+		ArrayList<TNode> path = new ArrayList<>();
+		TNode head = trainZero;
+	    while(head.getNext() != null){
+			path.add(head);
+			if(head.getNext().getLocation() > destination){
+				head = head.getDown();
+			}
+			else if(head.getNext().getLocation() == destination){
+				path.add(head.getNext());
+				return path;
+			}
+			else{
+				head = head.getNext();
+			}
+		}
+	    return path;
 	}
 
 	/**

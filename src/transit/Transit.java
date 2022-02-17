@@ -145,15 +145,38 @@ public class Transit {
 		TNode head = trainZero;
 	    while(head.getNext() != null){
 			path.add(head);
-			if(head.getNext().getLocation() > destination){
+			//If head.getNext() is at destination
+			if(head.getNext().getLocation() == destination){
+				//If there is something below
+				if(head.getNext().getDown() != null){
+					head = head.getNext();
+					path.add(head);
+					while(head.getDown() != null){
+						head = head.getDown();
+						path.add(head);
+					}
+					return path;
+				}
+				//Exactly at destination
+				else{
+					path.add(head.getNext());
+					return path;
+				}
+			}
+			//If head.getNext() is greater than destination
+			else if(head.getNext().getLocation() > destination){
 				head = head.getDown();
 			}
-			else if(head.getNext().getLocation() == destination){
-				path.add(head.getNext());
-				return path;
-			}
+			//If head.getNext() is less than destination
 			else{
-				head = head.getNext();
+				if(head.getNext().getNext() == null){
+					head = head.getNext();
+					path.add(head);
+					head = head.getDown();
+				}
+				else{
+					head = head.getNext();
+				}
 			}
 		}
 	    return path;

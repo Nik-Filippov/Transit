@@ -99,11 +99,15 @@ public class Transit {
 	 */
 	public void removeTrainStation(int station) {
 	    TNode curNode = trainZero;
-			while(curNode.getNext() != null){
-				if(curNode.getNext().getLocation() == station){
-					curNode.setNext(curNode.getNext().getNext());
-				}
-				curNode = curNode.getNext();
+		while(curNode.getNext() != null){
+			if(curNode.getNext().getLocation() == station){
+				curNode.setNext(curNode.getNext().getNext());
+				break;
+			}
+			else if(curNode.getNext().getNext().getNext() == null && curNode.getNext().getNext().getLocation() == station){
+				curNode.getNext().setNext(null);
+			}
+			curNode = curNode.getNext();
 		}
 	}
 

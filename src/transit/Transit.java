@@ -119,18 +119,28 @@ public class Transit {
 	 */
 	public void addBusStop(int busStop) {
 	    TNode curNode = trainZero.getDown();
-		while(curNode.getNext() != null){
-			if(curNode.getNext().getLocation() < busStop && curNode.getNext().getNext().getLocation() > busStop){
-				TNode temp = curNode.getNext().getNext();
-				curNode.getNext().setNext(new TNode(busStop));
-				curNode.getNext().getNext().setNext(temp);
+		while(curNode != null){
+			if(curNode.getLocation() < busStop && curNode.getNext().getLocation() > busStop){
+				TNode temp = curNode.getNext();
+				curNode.setNext(new TNode(busStop));
+				curNode.getNext().setNext(temp);
+				//Link to walk layer
 				TNode curNodeLoc = trainZero.getDown().getDown();
 				while(curNodeLoc.getNext() != null){
 					if(curNodeLoc.getNext().getLocation() == busStop){
-						curNode.getNext().getNext().setDown(curNodeLoc.getNext());
+						curNode.getNext().setDown(curNodeLoc.getNext());
 					}
 					curNodeLoc = curNodeLoc.getNext();
 				}
+				//Link to train layer
+				curNodeLoc = trainZero;
+				while(curNodeLoc.getNext() != null){
+					if(curNodeLoc.getNext().getLocation() == busStop){
+						curNodeLoc.getNext().setDown(curNode.getNext());
+					}
+					curNodeLoc = curNodeLoc.getNext();
+				}
+				break;
 			}
 			curNode = curNode.getNext();
 		}

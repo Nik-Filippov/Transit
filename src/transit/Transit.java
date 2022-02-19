@@ -193,9 +193,95 @@ public class Transit {
 	 * @return A reference to the train zero node of a deep copy
 	 */
 	public TNode duplicate() {
+		//Copy train layer
+		TNode current = trainZero;    
+        TNode newHeadTrain = null;    
+        TNode tail = null;
+		
+        while (current != null)
+        {
+            if (newHeadTrain == null)
+            {
+                newHeadTrain = new TNode(current.getLocation());
+                tail = newHeadTrain;
+            }
+            else {
+                tail.setNext(new TNode());
+                tail = tail.getNext();
+                tail.setLocation(current.getLocation());
+                tail.setNext(null);
+            }
+            current = current.getNext();
+        }
+		//Copy bus layer
+		current = trainZero.getDown();    
+        TNode newHeadBus = null;    
+        tail = null;
 
-	    // UPDATE THIS METHOD
-	    return null;
+ 		while (current != null)
+        {
+            if (newHeadBus == null)
+            {
+                newHeadBus = new TNode(current.getLocation());
+                tail = newHeadBus;
+            }
+            else {
+                tail.setNext(new TNode());
+                tail = tail.getNext();
+                tail.setLocation(current.getLocation());
+                tail.setNext(null);
+            }
+            current = current.getNext();
+        }
+		//Copy walking layer
+		current = trainZero.getDown().getDown();    
+        TNode newHeadWalk = null;    
+        tail = null;
+		
+		while (current != null)
+        {
+            if (newHeadWalk == null)
+            {
+                newHeadWalk = new TNode(current.getLocation());
+                tail = newHeadWalk;
+            }
+            else {
+                tail.setNext(new TNode());
+                tail = tail.getNext();
+                tail.setLocation(current.getLocation());
+                tail.setNext(null);
+            }
+            current = current.getNext();
+        }
+		//Connect train & bus
+		TNode currentTrain = newHeadTrain; 
+		TNode currentBus = newHeadBus;
+		while (currentTrain != null){
+			currentBus = newHeadBus;
+			while(currentBus != null){
+				if(currentTrain.getLocation() == currentBus.getLocation()){
+					currentTrain.setDown(currentBus);
+					break;
+				}
+				currentBus = currentBus.getNext();
+			}
+			currentTrain = currentTrain.getNext();
+		}
+		//Connect bus & walk
+		currentBus = newHeadBus;
+		TNode currentWalk = newHeadWalk; 
+		while (currentBus != null){
+			currentWalk = newHeadWalk;
+			while(currentWalk != null){
+				if(currentBus.getLocation() == currentWalk.getLocation()){
+					currentBus.setDown(currentWalk);
+					break;
+				}
+				currentWalk = currentWalk.getNext();
+			}
+			currentBus = currentBus.getNext();
+		}
+	    return newHeadTrain;
 	}
 
 	/**

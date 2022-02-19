@@ -301,8 +301,43 @@ public class Transit {
 	 * @param scooterStops An int array representing where the scooter stops are located
 	 */
 	public void addScooter(int[] scooterStops) {
-
-	    // UPDATE THIS METHOD
+		TNode curBus = trainZero.getDown();
+		TNode walkZero = trainZero.getDown().getDown();
+		TNode curWalk = trainZero.getDown().getDown();
+		TNode scooterZero = new TNode(0);
+		TNode curScooter = scooterZero;
+		//Create scooter row
+		for(int i = 0; i < scooterStops.length; i++){
+			TNode curNode = scooterZero;
+			while(curNode.getNext() != null){
+				curNode = curNode.getNext();
+			}
+			curNode.setNext(new TNode(scooterStops[i]));
+		}
+		//Link bus to scooter
+		while(curBus != null){
+			curScooter = scooterZero;
+			while(curScooter != null){
+				if(curBus.getLocation() == curScooter.getLocation()){
+					curBus.setDown(curScooter);
+					break;
+				}
+				curScooter = curScooter.getNext();
+			}
+			curBus = curBus.getNext();
+		}
+		//Link scooter to walk
+		curScooter = scooterZero; 
+		while(curScooter != null){
+			curWalk = walkZero;
+			while(curWalk != null){
+				if(curWalk.getLocation() == curScooter.getLocation()){
+					curScooter.setDown(curWalk);
+				}
+				curWalk = curWalk.getNext();
+			}
+			curScooter = curScooter.getNext();
+		}
 	}
 
 	/**

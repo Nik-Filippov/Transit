@@ -98,16 +98,28 @@ public class Transit {
 	 * @param station The location of the train station to remove
 	 */
 	public void removeTrainStation(int station) {
-	    TNode curNode = trainZero;
-		while(curNode.getNext() != null){
-			if(curNode.getNext().getLocation() == station){
-				curNode.setNext(curNode.getNext().getNext());
+		TNode curNode = trainZero;
+		//Check if Node is present
+		boolean nodeExist = false;
+		while(curNode != null){
+			if(curNode.getLocation() == station){
+				nodeExist = true;
 				break;
 			}
-			else if(curNode.getNext().getNext().getNext() == null && curNode.getNext().getNext().getLocation() == station){
-				curNode.getNext().setNext(null);
-			}
 			curNode = curNode.getNext();
+		}
+		if(nodeExist){
+	    	curNode = trainZero;
+			while(curNode.getNext() != null){
+				if(curNode.getNext().getLocation() == station){
+					curNode.setNext(curNode.getNext().getNext());
+					break;
+				}
+				else if(curNode.getNext().getNext().getNext() == null && curNode.getNext().getNext().getLocation() == station){
+					curNode.getNext().setNext(null);
+				}
+				curNode = curNode.getNext();
+			}
 		}
 	}
 
@@ -119,7 +131,46 @@ public class Transit {
 	 */
 	public void addBusStop(int busStop) {
 	    TNode curNode = trainZero.getDown();
+		TNode last = trainZero.getDown();
+
+		//Identify last node
+		while(last.getNext() != null){
+			last = last.getNext();
+		}
+		//If we want to add last bus stop
+		if(last.getLocation() < busStop){
+			last.setNext(new TNode(busStop));
+		//Connect train & bus
+		TNode currentTrain = trainZero; 
+		TNode currentBus = trainZero.getDown();
+		while (currentTrain != null){
+			currentBus = trainZero.getDown();
+			while(currentBus != null){
+				if(currentTrain.getLocation() == currentBus.getLocation()){
+					currentTrain.setDown(currentBus);
+					break;
+				}
+				currentBus = currentBus.getNext();
+			}
+			currentTrain = currentTrain.getNext();
+		}
+		//Connect bus & walk
+		currentBus = trainZero.getDown();
+		TNode currentWalk = trainZero.getDown().getDown(); 
+		while (currentBus != null){
+			currentWalk = trainZero.getDown().getDown();
+			while(currentWalk != null){
+				if(currentBus.getLocation() == currentWalk.getLocation()){
+					currentBus.setDown(currentWalk);
+					break;
+				}
+				currentWalk = currentWalk.getNext();
+			}
+			currentBus = currentBus.getNext();
+		}
+		}
 		while(curNode != null){
+			//General case
 			if(curNode.getLocation() < busStop && curNode.getNext().getLocation() > busStop){
 				TNode temp = curNode.getNext();
 				curNode.setNext(new TNode(busStop));
